@@ -1,7 +1,8 @@
 import Graph, { Edge } from "./lib/Graph.ts";
 import Heap from "./lib/Heap.ts";
-
+//class Dijkstra
 class Dijkstra {
+    //
     private graph: Graph;
     constructor(graph: Graph) {
         this.graph = graph;

@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Heap_ts_1 = require("./lib/Heap.ts");
+var Heap_ts_1 = require("./lib/Heap.js");
 var Dijkstra = /** @class */ (function () {
     function Dijkstra(graph) {
         this.graph = graph;
