@@ -312,7 +312,7 @@ function printAdjacencyList() {
   // Display using SweetAlert2
   Swal.fire({
     title: "Graph Export",
-    html: `<button onclick='if (navigator.clipboard) { navigator.clipboard.writeText(exportDataStr) .then(() => { console.log("Text copied to clipboard successfully!"); }) .catch(err => { console.error("Failed to copy text to clipboard: ", err); }); } else { console.error("Clipboard API not available.");'>copy</button><pre>${exportDataStr}</pre>`, // Preformatted text for better display
+    html: `<button onclick='if (navigator.clipboard) { navigator.clipboard.writeText(exportDataStr) .then(() => { console.log("Text copied to clipboard successfully!"); }) .catch(err => { console.error("Failed to copy text to clipboard: ", err); }); } else { console.error("Clipboard API not available.");}'>copy</button><pre>${exportDataStr}</pre>`, // Preformatted text for better display
     icon: "info",
     confirmButtonText: "Close"
   });
