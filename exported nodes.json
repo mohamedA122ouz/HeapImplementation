@@ -1,0 +1,44 @@
+{
+    "adjacencyList": {
+        "Node 1": [
+            {
+                "node": "Node 3",
+                "cost": "1"
+            }
+        ],
+        "Node 2": [
+            {
+                "node": "Node 1",
+                "cost": "5"
+            }
+        ],
+        "Node 3": [],
+        "Node 4": [],
+        "Node 5": [
+            {
+                "node": "Node 4",
+                "cost": "15"
+            },
+            {
+                "node": "Node 1",
+                "cost": "12"
+            }
+        ],
+        "Node 6": [
+            {
+                "node": "Node 2",
+                "cost": "10"
+            },
+            {
+                "node": "Node 4",
+                "cost": "14"
+            },
+            {
+                "node": "Node 3",
+                "cost": "16"
+            }
+        ]
+    },
+    "startNode": "Node 1",
+    "endNode": "Node 3"
+}

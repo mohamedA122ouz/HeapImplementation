@@ -1,6 +1,6 @@
-import Graph, { Edge } from "./lib/Graph.ts";
+import Graph, { Edge } from "./Graph.ts";
 import Dijkstra from "./dikistarAlgo.ts";
-
+// a test case to the dijkstra algorithm
 Deno.test("Dijkstra - Basic path finding", () => {
     const graph = new Graph();
     graph.AddEdge(1, 2, 4);

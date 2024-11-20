@@ -1,4 +1,3 @@
-//import Pir
 class Edge {
 
   constructor(from_arg: number, to_arg: number, weight_arg: number) {

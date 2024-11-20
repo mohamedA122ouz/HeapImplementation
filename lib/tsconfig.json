@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "target": "ESNext", // or "ES2015" or higher
+    "module": "ESNext", // or "ESNext"
+    "moduleResolution": "node", // Optional, useful for module resolution
+    "strict": true, // Optional, enables strict type-checking options
+    "esModuleInterop": true, // Optional, allows default import from commonjs modules
+    "skipLibCheck": true // Optional, speeds up compilation by skipping type checking of all declaration files
+  }
+}
