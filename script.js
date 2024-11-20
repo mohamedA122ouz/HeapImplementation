@@ -1,9 +1,14 @@
 import Dijkstra from "./lib/dikistarAlgo.js";
 import Graph from "./lib/Graph.js";
+import { test1, test2,test3,test4,test5,test6,test7,test8,test9,test10 } from './DataForTesting.js';
 
 let startNode = null; // Variable for the start node
 let endNode = null;   // Variable for the end node
-
+let converter = {}; // used to convert between the ui graph and the graph
+let animation = [] ;
+let path = [] ;
+let distance = 0 ;
+let currentStep = 0 ;
 const $ = go.GraphObject.make;
 
 // Initialize the Diagram
@@ -187,7 +192,15 @@ function updateNodeColor(node, rgbColor) {
   }
 }
 
-function updateEdgeColorByNodeNames(nodeName1, nodeName2, rgbColor) {
+ 
+window.updateNodeColorByName = function updateNodeColorByName(nodeName, rgbColor) {
+  // Look for the node by its current "key" (name)
+  const node = myDiagram.findNodeForKey(nodeName);
+  updateNodeColor(node , rgbColor) ;
+}
+
+// Update the color of a specified node
+window.updateEdgeColorByNodeNames = function updateEdgeColorByNodeNames(nodeName1, nodeName2, rgbColor) {
   let foundLink = null;
 
   // Find the starting node
@@ -410,24 +423,62 @@ function importAdjacencyListFromInput() {
 }
 
 function applyAlgo() {
+  // save json of adjacency list into variable adjacencyList
   const {startNode,endNode,adjacencyList} = buildAdjacencyList(myDiagram);
-  const graph = new Graph();
-  let converter = {};
+  const graph = new Graph(); // create graph variable
+
   let i = 0;
   for(let node in adjacencyList){
-    converter[node] = i++;
+    converter[node] = i++;    
   }
   //input graph from user 
   //build adjacency list
   for(let n in adjacencyList){
     adjacencyList[n].forEach(el=>{
+      console.log(converter[n],converter[el.node],parseInt(el.cost)) ;
+      console.log(n,el.node,parseInt(el.cost)) ;
       graph.AddEdge(converter[n],converter[el.node],parseInt(el.cost));
     });
   }
   const dijkstra = new Dijkstra(graph);
   const result = dijkstra.shortestPath(converter[startNode], converter[endNode]);
+  //"path":[0,2,1,4,5]}
+  //distance
+  for (i=0;i<result.path.length; i++) {
+    result.path[i] = getKeyByValue(converter, result.path[i]) ;
+  }
+  animation = result.animation ;
+  distance = result.distance ;
+  path = result.path ;
+
   alert(JSON.stringify(result));
 }
+
+function animate() {
+  let currentAnimation = animation[currentStep] ;
+  if ( currentAnimation.edge) {
+    let first = getKeyByValue(converter,currentAnimation.edge[0]) ;
+    let second = getKeyByValue(converter,currentAnimation.edge[1]) ;
+    updateEdgeColorByNodeNames(first,second, currentAnimation.color) ;
+  } else {
+    let first = getKeyByValue(converter,currentAnimation.node) ;
+    updateNodeColorByName(first, currentAnimation.color) ;
+  }
+  currentStep++ ;
+
+}
+
+function getKeyByValue(obj, value) {
+  for (const key in obj) {
+      if (obj[key] == value) {          
+          return key;
+      }
+  }
+  return null; // or undefined, if the value is not found
+}
+
+
+
 // console.log("output");
 // Add event listeners to the buttons
 document.getElementById("setStartNodeButton").addEventListener("click", setStartNode);
@@ -436,3 +487,45 @@ document.getElementById("setEndNodeButton").addEventListener("click", setEndNode
 document.getElementById("printAdjacencyListButton").addEventListener("click", printAdjacencyList);
 document.getElementById("importAdjacencyListFromInput").addEventListener("click", importAdjacencyListFromInput);
 document.getElementById("applyAlgo").addEventListener("click", applyAlgo);
+document.getElementById("animate").addEventListener("click", animate);
+
+document.getElementById("t1").onclick = () => {
+  importAdjacencyList(test1);
+  applyAlgo();
+};
+document.getElementById("t2").onclick = () => {
+  importAdjacencyList(test2);
+  applyAlgo();
+};
+document.getElementById("t3").onclick = () => {
+  importAdjacencyList(test3);
+  applyAlgo();
+};
+document.getElementById("t4").onclick = () => {
+  importAdjacencyList(test4);
+  applyAlgo();
+};
+document.getElementById("t5").onclick =() => {
+  importAdjacencyList(test5);
+  applyAlgo();
+};
+document.getElementById("t6").onclick = () => {
+  importAdjacencyList(test6);
+  applyAlgo();
+};
+document.getElementById("t7").onclick = () => {
+  importAdjacencyList(test7);
+  applyAlgo();
+};
+document.getElementById("t8").onclick = () => {
+  importAdjacencyList(test8);
+  applyAlgo();
+};
+document.getElementById("t9").onclick = () => {
+  importAdjacencyList(test9);
+  applyAlgo();
+};
+document.getElementById("t10").onclick = () => {
+  importAdjacencyList(test10);
+  applyAlgo();
+};
