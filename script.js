@@ -9,6 +9,8 @@ let animation = [] ;
 let path = [] ;
 let distance = 0 ;
 let currentStep = 0 ;
+let table = [] ;
+let lastTable = [] ;
 const $ = go.GraphObject.make;
 
 // Initialize the Diagram
@@ -450,8 +452,22 @@ function applyAlgo() {
   animation = result.animation ;
   distance = result.distance ;
   path = result.path ;
+  table = result.table ; 
+  // alert(JSON.stringify(result));
+  // displayRounds(table);
+  
+  let last_round = table.length - 1 ;
+  let last_table = table[last_round] ;
+  let end_node_index_in_last_round = -1 ;
+  for(let i = 0 ; i < last_table.length ; i++) {
+    console.log(last_table[i].distances) ;
+    // if (converter[endNode.key] == last_table[i]) {
+    //   end_node_index_in_last_round = i ; 
+    //   break
+    // }
+  }
+  // alert(last_table[end_node_index_in_last_round])
 
-  alert(JSON.stringify(result));
 }
 
 function animate() {
@@ -465,6 +481,11 @@ function animate() {
     updateNodeColorByName(first, currentAnimation.color) ;
   }
   currentStep++ ;
+  // currentStep = currentStep % animation.length ; 
+  if(currentStep == animation.length){
+    currentStep = currentStep - 1;
+    alert("animation done")
+  }
 
 }
 
@@ -477,6 +498,101 @@ function getKeyByValue(obj, value) {
   return null; // or undefined, if the value is not found
 }
 
+// Function to display the rounds using SweetAlert2
+function displayRounds() {
+  // Build the HTML table dynamically
+  let htmlTable = `
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+              <tr>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Round</th>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Node</th>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Distance</th>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Previous</th>
+              </tr>
+          </thead>
+          <tbody>
+  `;
+
+  // Loop through each round in the table
+  table.forEach((round, index) => {
+      round.distances.forEach((distance, node) => {
+          htmlTable += `
+              <tr>
+                  <td style="border-bottom: 1px solid #ddd; padding: 8px;">${index + 1}</td>
+                  <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, node)}</td>
+                  <td style="border-bottom: 1px solid #ddd; padding: 8px;">${distance === Infinity ? '∞' : distance}</td>
+                  <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, round.previous.get(node)) ?? 'None'}</td>
+              </tr>
+          `;
+      });
+  });
+
+  // Close the table tags
+  htmlTable += `
+          </tbody>
+      </table>
+  `;
+
+  // Use SweetAlert2 to display the table
+  Swal.fire({
+      title: 'Dijkstra Algorithm Rounds',
+      html: htmlTable,
+      width: '800px',
+      showCloseButton: true,
+      confirmButtonText: 'Close'
+  });
+}
+
+function displayLastRound() {
+  // Get the last round from the table
+  const lastRoundIndex = table.length - 1;
+  const lastRound = table[lastRoundIndex];
+
+  // Build the HTML table for the last round
+  let htmlTable = `
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+          <thead>
+              <tr>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Node</th>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Distance</th>
+                  <th style="border-bottom: 1px solid #ddd; padding: 8px;">Previous</th>
+              </tr>
+          </thead>
+          <tbody>
+  `;
+
+  // Loop through the distances of the last round
+  lastRound.distances.forEach((distance, node) => {
+      htmlTable += `
+          <tr>
+              <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, node)}</td>
+              <td style="border-bottom: 1px solid #ddd; padding: 8px;">${distance === Infinity ? '∞' : distance}</td>
+              <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, lastRound.previous.get(node)) ?? 'None'}</td>
+          </tr>
+      `;
+  });
+
+  // Close the table tags
+  htmlTable += `
+          </tbody>
+      </table>
+  `;
+
+  // Use SweetAlert2 to display the last round
+  Swal.fire({
+      title: 'Dijkstra Algorithm - Final Round',
+      html: htmlTable,
+      width: '600px',
+      showCloseButton: true,
+      confirmButtonText: 'Close'
+  });
+}
+
+// Example usage with the table and converter
+// Pass the table and the converter object
+// const converter = { "Node 1": 0, "Node 2": 1, "Node 3": 2, ... };
+// displayLastRound(dijkstraResult.table, converter);
 
 
 // console.log("output");
@@ -488,44 +604,47 @@ document.getElementById("printAdjacencyListButton").addEventListener("click", pr
 document.getElementById("importAdjacencyListFromInput").addEventListener("click", importAdjacencyListFromInput);
 document.getElementById("applyAlgo").addEventListener("click", applyAlgo);
 document.getElementById("animate").addEventListener("click", animate);
+document.getElementById("showRounds").addEventListener("click", displayRounds);
+document.getElementById("displayLastRound").addEventListener("click", displayLastRound);
+
 
 document.getElementById("t1").onclick = () => {
   importAdjacencyList(test1);
-  applyAlgo();
+
 };
 document.getElementById("t2").onclick = () => {
   importAdjacencyList(test2);
-  applyAlgo();
+
 };
 document.getElementById("t3").onclick = () => {
   importAdjacencyList(test3);
-  applyAlgo();
+
 };
 document.getElementById("t4").onclick = () => {
   importAdjacencyList(test4);
-  applyAlgo();
+
 };
 document.getElementById("t5").onclick =() => {
   importAdjacencyList(test5);
-  applyAlgo();
+
 };
 document.getElementById("t6").onclick = () => {
   importAdjacencyList(test6);
-  applyAlgo();
+
 };
 document.getElementById("t7").onclick = () => {
   importAdjacencyList(test7);
-  applyAlgo();
+
 };
 document.getElementById("t8").onclick = () => {
   importAdjacencyList(test8);
-  applyAlgo();
+
 };
 document.getElementById("t9").onclick = () => {
   importAdjacencyList(test9);
-  applyAlgo();
+
 };
 document.getElementById("t10").onclick = () => {
   importAdjacencyList(test10);
-  applyAlgo();
+
 };
