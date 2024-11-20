@@ -12,7 +12,7 @@ class Dijkstra {
         const previous: Map<number, number | null> = new Map();
         const minHeap = new Heap<{ vertex: number, distance: number }>(
             [],
-            (a, b) => a.distance < b.distance//priority function to create (minHeap)
+            (a, b) => a.distance > b.distance//priority function to create (minHeap)
         );//this datastructure is documented withing the code it self in side lib
         distances.set(start, 0);
         minHeap.enqueue({ vertex: start, distance: 0 });
