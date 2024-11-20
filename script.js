@@ -312,7 +312,7 @@ function printAdjacencyList() {
   // Display using SweetAlert2
   Swal.fire({
     title: "Graph Export",
-    html: `<button onclick='if(navigator.clipboard){navigator.clipboard.writeText(exportDataStr);}'>copy</button><pre>${exportDataStr}</pre>`, // Preformatted text for better display
+    html: `<button onclick='if (navigator.clipboard) { navigator.clipboard.writeText(exportDataStr) .then(() => { console.log("Text copied to clipboard successfully!"); }) .catch(err => { console.error("Failed to copy text to clipboard: ", err); }); } else { console.error("Clipboard API not available.");'>copy</button><pre>${exportDataStr}</pre>`, // Preformatted text for better display
     icon: "info",
     confirmButtonText: "Close"
   });
@@ -421,14 +421,14 @@ function applyAlgo() {
   //build adjacency list
   for(let n in adjacencyList){
     adjacencyList[n].forEach(el=>{
-      graph.AddEdge(converter[n],converter[el.node],el.cost);
+      graph.AddEdge(converter[n],converter[el.node],parseInt(el.cost));
     });
   }
   const dijkstra = new Dijkstra(graph);
   const result = dijkstra.shortestPath(converter[startNode], converter[endNode]);
   alert(JSON.stringify(result));
 }
-console.log("output");
+// console.log("output");
 // Add event listeners to the buttons
 document.getElementById("setStartNodeButton").addEventListener("click", setStartNode);
 document.getElementById("setEndNodeButton").addEventListener("click", setEndNode);
