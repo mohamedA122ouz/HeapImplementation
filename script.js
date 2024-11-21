@@ -488,7 +488,7 @@ function animate() {
     }
     // currentStep = currentStep % animation.length ; 
     else {
-      currentStep = currentStep - 1;
+      currentStep = 0;
       clearInterval(timer);
       alert("animation done");
     }
