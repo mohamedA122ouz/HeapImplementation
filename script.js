@@ -1,16 +1,16 @@
 import Dijkstra from "./lib/dikistarAlgo.js";
 import Graph from "./lib/Graph.js";
-import { test1, test2,test3,test4,test5,test6,test7,test8,test9,test10 } from './DataForTesting.js';
+import { test1, test2, test3, test4, test5, test6, test7, test8, test9, test10 } from './DataForTesting.js';
 
 let startNode = null; // Variable for the start node
 let endNode = null;   // Variable for the end node
 let converter = {}; // used to convert between the ui graph and the graph
-let animation = [] ;
-let path = [] ;
-let distance = 0 ;
-let currentStep = 0 ;
-let table = [] ;
-let lastTable = [] ;
+let animation = [];
+let path = [];
+let distance = 0;
+let currentStep = 0;
+let table = [];
+let lastTable = [];
 const $ = go.GraphObject.make;
 
 // Initialize the Diagram
@@ -194,11 +194,11 @@ function updateNodeColor(node, rgbColor) {
   }
 }
 
- 
+
 window.updateNodeColorByName = function updateNodeColorByName(nodeName, rgbColor) {
   // Look for the node by its current "key" (name)
   const node = myDiagram.findNodeForKey(nodeName);
-  updateNodeColor(node , rgbColor) ;
+  updateNodeColor(node, rgbColor);
 }
 
 // Update the color of a specified node
@@ -426,41 +426,42 @@ function importAdjacencyListFromInput() {
 
 function applyAlgo() {
   // save json of adjacency list into variable adjacencyList
-  const {startNode,endNode,adjacencyList} = buildAdjacencyList(myDiagram);
+  const { startNode, endNode, adjacencyList } = buildAdjacencyList(myDiagram);
   const graph = new Graph(); // create graph variable
 
   let i = 0;
-  for(let node in adjacencyList){
-    converter[node] = i++;    
+  for (let node in adjacencyList) {
+    converter[node] = i++;
   }
   //input graph from user 
   //build adjacency list
-  for(let n in adjacencyList){
-    adjacencyList[n].forEach(el=>{
-      console.log(converter[n],converter[el.node],parseInt(el.cost)) ;
-      console.log(n,el.node,parseInt(el.cost)) ;
-      graph.AddEdge(converter[n],converter[el.node],parseInt(el.cost));
+  for (let n in adjacencyList) {
+    adjacencyList[n].forEach(el => {
+      console.log(converter[n], converter[el.node], parseInt(el.cost));
+      console.log(n, el.node, parseInt(el.cost));
+      graph.AddEdge(converter[n], converter[el.node], parseInt(el.cost));
     });
   }
   const dijkstra = new Dijkstra(graph);
   const result = dijkstra.shortestPath(converter[startNode], converter[endNode]);
   //"path":[0,2,1,4,5]}
   //distance
-  for (i=0;i<result.path.length; i++) {
-    result.path[i] = getKeyByValue(converter, result.path[i]) ;
+  for (i = 0; i < result.path.length; i++) {
+    result.path[i] = getKeyByValue(converter, result.path[i]);
   }
-  animation = result.animation ;
-  distance = result.distance ;
-  path = result.path ;
-  table = result.table ; 
+  alert("shortest path is:\n[" + result.path+"]");
+  animation = result.animation;
+  distance = result.distance;
+  path = result.path;
+  table = result.table;
   // alert(JSON.stringify(result));
   // displayRounds(table);
-  
-  let last_round = table.length - 1 ;
-  let last_table = table[last_round] ;
-  let end_node_index_in_last_round = -1 ;
-  for(let i = 0 ; i < last_table.length ; i++) {
-    console.log(last_table[i].distances) ;
+
+  let last_round = table.length - 1;
+  let last_table = table[last_round];
+  let end_node_index_in_last_round = -1;
+  for (let i = 0; i < last_table.length; i++) {
+    console.log(last_table[i].distances);
     // if (converter[endNode.key] == last_table[i]) {
     //   end_node_index_in_last_round = i ; 
     //   break
@@ -471,29 +472,35 @@ function applyAlgo() {
 }
 
 function animate() {
-  let currentAnimation = animation[currentStep] ;
-  if ( currentAnimation.edge) {
-    let first = getKeyByValue(converter,currentAnimation.edge[0]) ;
-    let second = getKeyByValue(converter,currentAnimation.edge[1]) ;
-    updateEdgeColorByNodeNames(first,second, currentAnimation.color) ;
-  } else {
-    let first = getKeyByValue(converter,currentAnimation.node) ;
-    updateNodeColorByName(first, currentAnimation.color) ;
-  }
-  currentStep++ ;
-  // currentStep = currentStep % animation.length ; 
-  if(currentStep == animation.length){
-    currentStep = currentStep - 1;
-    alert("animation done")
-  }
+  const timer = setInterval(() => {
+    if (animation[currentStep]) {
+
+      let currentAnimation = animation[currentStep];
+      if (currentAnimation.edge) {
+        let first = getKeyByValue(converter, currentAnimation.edge[0]);
+        let second = getKeyByValue(converter, currentAnimation.edge[1]);
+        updateEdgeColorByNodeNames(first, second, currentAnimation.color);
+      } else {
+        let first = getKeyByValue(converter, currentAnimation.node);
+        updateNodeColorByName(first, currentAnimation.color);
+      }
+      currentStep++;
+    }
+    // currentStep = currentStep % animation.length ; 
+    else {
+      currentStep = currentStep - 1;
+      clearInterval(timer);
+      alert("animation done");
+    }
+  }, 200);
 
 }
 
 function getKeyByValue(obj, value) {
   for (const key in obj) {
-      if (obj[key] == value) {          
-          return key;
-      }
+    if (obj[key] == value) {
+      return key;
+    }
   }
   return null; // or undefined, if the value is not found
 }
@@ -516,8 +523,8 @@ function displayRounds() {
 
   // Loop through each round in the table
   table.forEach((round, index) => {
-      round.distances.forEach((distance, node) => {
-          htmlTable += `
+    round.distances.forEach((distance, node) => {
+      htmlTable += `
               <tr>
                   <td style="border-bottom: 1px solid #ddd; padding: 8px;">${index + 1}</td>
                   <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, node)}</td>
@@ -525,7 +532,7 @@ function displayRounds() {
                   <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, round.previous.get(node)) ?? 'None'}</td>
               </tr>
           `;
-      });
+    });
   });
 
   // Close the table tags
@@ -536,11 +543,11 @@ function displayRounds() {
 
   // Use SweetAlert2 to display the table
   Swal.fire({
-      title: 'Dijkstra Algorithm Rounds',
-      html: htmlTable,
-      width: '800px',
-      showCloseButton: true,
-      confirmButtonText: 'Close'
+    title: 'Dijkstra Algorithm Rounds',
+    html: htmlTable,
+    width: '800px',
+    showCloseButton: true,
+    confirmButtonText: 'Close'
   });
 }
 
@@ -564,7 +571,7 @@ function displayLastRound() {
 
   // Loop through the distances of the last round
   lastRound.distances.forEach((distance, node) => {
-      htmlTable += `
+    htmlTable += `
           <tr>
               <td style="border-bottom: 1px solid #ddd; padding: 8px;">${getKeyByValue(converter, node)}</td>
               <td style="border-bottom: 1px solid #ddd; padding: 8px;">${distance === Infinity ? '∞' : distance}</td>
@@ -581,11 +588,11 @@ function displayLastRound() {
 
   // Use SweetAlert2 to display the last round
   Swal.fire({
-      title: 'Dijkstra Algorithm - Final Round',
-      html: htmlTable,
-      width: '600px',
-      showCloseButton: true,
-      confirmButtonText: 'Close'
+    title: 'Dijkstra Algorithm - Final Round',
+    html: htmlTable,
+    width: '600px',
+    showCloseButton: true,
+    confirmButtonText: 'Close'
   });
 }
 
@@ -624,7 +631,7 @@ document.getElementById("t4").onclick = () => {
   importAdjacencyList(test4);
 
 };
-document.getElementById("t5").onclick =() => {
+document.getElementById("t5").onclick = () => {
   importAdjacencyList(test5);
 
 };
